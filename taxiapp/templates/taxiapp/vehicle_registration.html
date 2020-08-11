@@ -1,0 +1,136 @@
+{% extends "taxiapp/base.html" %}
+{% block main %}
+<style type="text/css">
+.container {
+    width: 800px;
+}
+
+table, th, td {
+    padding: 5px;
+  }
+
+  table {
+    border-spacing: 15px;
+  }
+
+  .profile-userbuttons {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+/* HIDE RADIO */
+[type=radio] { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* IMAGE STYLES */
+[type=radio] + img {
+  cursor: pointer;
+}
+
+/* CHECKED STYLES */
+[type=radio]:checked + img.green {
+  outline: 2px solid green;
+}
+[type=radio]:checked + img.red {
+  outline: 2px solid red;
+}
+
+/* Rating Star Widgets Style */
+.rating-stars ul {
+  list-style-type:none;
+  padding:0;
+  
+  -moz-user-select:none;
+  -webkit-user-select:none;
+}
+.rating-stars ul > li.star {
+  display:inline-block;
+  
+}
+
+/* Idle State of the stars */
+.rating-stars ul > li.star > i.fa {
+  font-size:2.5em; /* Change the size of the stars */
+  color:#ccc; /* Color on idle state */
+}
+
+/* Hover state of the stars */
+.rating-stars ul > li.star.hover > i.fa {
+  color:#FFCC36;
+}
+
+/* Selected state of the stars */
+.rating-stars ul > li.star.selected > i.fa {
+  color:#FF912C;
+}
+
+</style>
+    
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title" style="text-align: center;">Vehicle registration</h3>
+      </div>
+      <form action="/vehicle_register_details/" method="POST">
+        {%csrf_token%}
+        <table align="center" border="0">
+            <tr>
+                <td>Name:</td>
+                <td>
+                    <input type="text" placeholder="Name" name="name" required maxlength="50"> 
+                </td>
+            </tr>
+            <tr>
+                  <td>Vehicle Type:</td>
+                  <td>
+                    <select name="vehicle_type" id="vehicle_type">
+                           {% for vehicleType in vehicle_types %}
+                           <option value={{vehicleType.vehicle_type}}>{{vehicleType.vehicle_type}}</option>
+                            {% endfor %}
+                    </select>
+                </td>
+              </tr>
+              <tr>
+                      <td>Vehicle Number:</td>
+                      <td>
+                          <input type="text" placeholder="Vehicle Number" name="vehicle_number"  maxlength="25"> 
+                      </td>
+              </tr>
+              <tr>
+                <td>Phone Number:</td>
+                    <td>
+                    <input type="text" placeholder="Phone NUmber" name="phone_number"  maxlength="100"> 
+                </td>
+                </tr>
+    
+              <tr> 
+                  <td>Source</td>
+                  <td>
+                      <select name="source" id="source">
+                             {% for source in sources %}
+                             <option value={{source.id}}>{{source.source_name}}</option>
+                              {% endfor %}
+                      </select>
+                  </td>
+                </tr>
+               
+                
+                <tr>
+                    <td>&nbsp;</td>
+                    <td align="center">
+                        <button type="submit" class="btn btn-success btn-sm">Save</button>
+                    </td>
+                </tr>
+            </table>
+
+      </form>
+      <!-- <div class="profile-userbuttons center-block">
+        <button type="button" class="btn btn-success btn-sm" onclick="saveCustomerDetails()"
+          style="margin:0.5em;">submit</button>
+      </div> -->
+      </div>
+   
+{% endblock %}

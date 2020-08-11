@@ -1,0 +1,60 @@
+{% extends "taxiapp/base.html" %}
+
+{% load bootstrap3 %}
+
+{% block main %}
+<h1>Add Complaints</h1>
+    <form method="POST" class="form">
+       {% csrf_token %}
+       {% bootstrap_form form %}
+            
+        {% buttons %}
+        <button type="submit" class="btn btn-primary"> Register Complaint
+        </button>
+        {% endbuttons %}
+
+</form>
+
+
+<script type="text/javascript">
+    function getLoc() {
+ // var output = document.getElementById("out");
+
+  if (!navigator.geolocation){
+    //.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+	console.log("Geolocation is not supported by your browser");
+    //return;
+  }
+
+  function success(position) {
+    var latitude  = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    document.getElementById('id_area').value='https://www.google.co.in/maps/place/'+latitude+','+longitude+'';
+    document.getElementById('id_area').readOnly = true;
+
+    //output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
+
+    //var img = new Image();
+   // img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
+
+   // output.appendChild(img);
+  }
+
+  function error() {
+   // var url = "http://"+"{{request.get_host}}";
+   // var id = "{{taxi.id}}";
+   // window.open(url+'/complaint/'+id,"_self")
+    //output.innerHTML = "Unable to retrieve your location";
+	        console.log("unable to retrieve location");
+
+  }
+
+ // output.innerHTML = "<p>Locating…</p>";
+
+  navigator.geolocation.getCurrentPosition(success, error);
+}
+
+</script>
+<script type="text/javascript">getLoc()</script>
+
+{% endblock %}

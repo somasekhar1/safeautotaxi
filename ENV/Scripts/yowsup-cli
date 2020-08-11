@@ -1,0 +1,4 @@
+#!E:\TaxiApp\Development\taxiapp\tproject\ENV\Scripts\python.exe
+# EASY-INSTALL-SCRIPT: 'yowsup2==2.5.7','yowsup-cli'
+__requires__ = 'yowsup2==2.5.7'
+__import__('pkg_resources').run_script('yowsup2==2.5.7', 'yowsup-cli')

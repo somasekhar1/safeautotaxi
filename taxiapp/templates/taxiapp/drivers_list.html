@@ -1,0 +1,222 @@
+{% extends "taxiapp/base.html" %}
+{% block main %}
+
+<style type="text/css">
+
+body{
+    width:100%;
+    text-align:center;
+}
+img{
+    border:0;
+}
+#main{
+    margin: 15px auto;
+    background:white;
+    overflow: auto;
+    width: 100%;
+}
+#header{
+    background:white;
+    margin-bottom:15px;
+}
+#mainbody{
+    background: white;
+    width:100%;
+    display:none;
+}
+#footer{
+    background:white;
+}
+#v{
+    width:320px;
+    height:240px;
+}
+#qr-canvas{
+    display:none;
+}
+#qrfile{
+    width:320px;
+    height:240px;
+}
+#mp1{
+    text-align:center;
+    font-size:35px;
+}
+#imghelp{
+    position:relative;
+    left:0px;
+    top:-160px;
+    z-index:100;
+    font:18px arial,sans-serif;
+    background:#f0f0f0;
+    margin-left:35px;
+    margin-right:35px;
+    padding-top:10px;
+    padding-bottom:10px;
+    border-radius:20px;
+}
+.selector{
+    margin:0;
+    padding:0;
+    cursor:pointer;
+    margin-bottom:-5px;
+}
+#outdiv
+{
+    width:320px;
+    height:240px;
+    border-width: 3px 3px 3px 3px;
+}
+#result{
+    border: solid;
+    border-width: 1px 1px 1px 1px;
+    padding:20px;
+    width:70%;
+}
+
+.onoffswitch4 {
+    position: relative; width: 90px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+
+.onoffswitch4-checkbox {
+    display: none;
+}
+
+.onoffswitch4-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #27A1CA; border-radius: 0px;
+}
+
+.onoffswitch4-inner {
+    display: block; width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+
+.onoffswitch4-inner:before, .onoffswitch4-inner:after {
+    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 26px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.onoffswitch4-inner:before {
+    content: "Cam1";
+    padding-left: 10px;
+    background-color: #FFFFFF; color: #27A1CA;
+}
+
+.onoffswitch4-inner:after {
+    content: "Cam2";
+    padding-right: 10px;
+    background-color: #FFFFFF; color: #666666;
+    text-align: right;
+}
+
+.onoffswitch4-switch {
+    display: block; width: 25px; margin: 0px;
+    background: #27A1CA;
+    position: absolute; top: 0; bottom: 0; right: 65px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+}
+
+.onoffswitch4-checkbox:checked + .onoffswitch4-label .onoffswitch4-inner {
+    margin-left: 0;
+}
+
+.onoffswitch4-checkbox:checked + .onoffswitch4-label .onoffswitch4-switch {
+    right: 0px; 
+}
+
+p {
+    margin-left: -4px;
+}
+p {display:inline}
+</style>
+{% load static %}
+
+<h4 style="text-align: center; color: green;">{{message}}</h4>
+
+
+<script type="text/javascript" src="{% static 'llqrcode.js' %}"></script>
+<script type="text/javascript" src="{% static 'webqr.js' %}"></script>
+
+<br>
+<br>
+    <h1 class="text-center login-title">Scan QR Code</h1>
+    <div id="qr-btn" >
+    </div>
+        <div id="mainbody">
+        <table class="tsel" border="0" width="100%">
+        <tr>
+        <td valign="top" align="center" width="50%">
+        <table class="tsel" border="0">
+	        <tr>
+            <td></td>
+            <td id="togglecam" style="display: none;">
+		<div class="onoffswitch4">
+             <input type="checkbox" name="onoffswitch4" onchange="handleChange(this);" class="onoffswitch4-checkbox" id="myonoffswitch4" checked>
+              <label class="onoffswitch4-label" for="myonoffswitch4">
+              <span class="onoffswitch4-inner"></span>
+              <span class="onoffswitch4-switch"></span>
+             </label>
+            </div>
+            </td>
+            </tr>
+        <tr><td colspan="2" align="center">
+        <div id="outdiv">
+        </div></td></tr>
+        </table>
+        </td>
+        </tr>
+        </table>
+
+        </div>
+        <div class="text-center">
+        <form style='margin-left: -15px;padding-top: 20px;' method="POST" class="post-form">{% csrf_token %}
+        Search Vehicle:{{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+        </form>
+
+        </div>
+        <br>
+    <div class="text-center">
+    <form method="POST"  action="/driver/" id='taxi'>{% csrf_token %}
+        Search Driver:<input type="text" placeholder="" name="driverId" id='driverId' required style="margin-left: 0px;">
+    <button type="button" class="btn btn-primary btn-sm" onclick="submitForm()">Submit</button>
+    </form>
+    </div>
+
+    <br>
+    <div class="text-center login-title">
+            <a href="/vehice_registrations" >
+                <button class="btn btn-primary btn-sm">Vehicle Registration</button>
+            </a>
+        </div> 
+
+</div>
+
+<canvas id="qr-canvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+	load("back");
+	function handleChange(checkbox) {
+    if(checkbox.checked == true){
+        stopcam();
+	load("back");	
+    }else{
+  	stopcam();
+        load("front");  
+   }
+}
+function submitForm(){
+    var driverId = document.getElementById("driverId").value;
+    document.getElementById("taxi").action = '/driver/'+driverId+'/';
+    document.getElementById("taxi").submit();
+}
+
+</script>
+{% endblock %}
